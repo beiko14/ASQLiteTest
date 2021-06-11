@@ -2,10 +2,14 @@ package com.example.asqlitetest;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String CUSTOMER_TABLE = "CUSTOMER_TABLE";
@@ -47,6 +51,40 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+
+    public List<CustomerModel> getEveryone(){
+
+        List<CustomerModel> returnList = new ArrayList<>();
+
+        String queryString = "SELECT * FROM " + CUSTOMER_TABLE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if(cursor.moveToFirst()){
+            // loop through the cursor (result set) and create new customer objects. put them into the return list
+            do{
+                int customerId = cursor.getInt(0);
+                String customerName = cursor.getString(1);
+                int customerAge = cursor.getInt(2);
+                boolean customerIsActive = cursor.getInt(3) == 1 ? true : false;
+
+                CustomerModel newCustomer = new CustomerModel(customerId, customerName, customerAge, customerIsActive);
+                returnList.add(newCustomer);
+
+            } while(cursor.moveToNext());
+
+        } else{
+            // DB-Query returns an empty list :(
+        }
+
+        cursor.close();
+        db.close();
+
+        return returnList;
+    }
+
 }
 
 
