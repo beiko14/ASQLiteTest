@@ -37,6 +37,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean addOne(CustomerModel customerModel){
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -57,9 +58,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         List<CustomerModel> returnList = new ArrayList<>();
 
         String queryString = "SELECT * FROM " + CUSTOMER_TABLE;
-
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = db.rawQuery(queryString, null);
 
         if(cursor.moveToFirst()){
@@ -83,6 +82,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return returnList;
+    }
+
+
+    public boolean deleteOne(CustomerModel customerModel){
+
+        String queryString = "DELETE FROM " + CUSTOMER_TABLE + " WHERE " + COLUMN_ID + " = " + customerModel.getId();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if(cursor.moveToFirst()){
+            return true;
+        } else{
+            return false;
+        }
+
     }
 
 }
