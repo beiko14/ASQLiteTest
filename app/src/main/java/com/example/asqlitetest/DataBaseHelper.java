@@ -99,6 +99,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+
+    public List<CustomerModel> searchCustomer(String searchTerm){
+
+        List<CustomerModel> foundCustomers = new ArrayList<>();
+
+        String queryString = "SELECT * FROM " + CUSTOMER_TABLE + " WHERE " + COLUMN_CUSTOMER_NAME +
+                " LIKE '" + searchTerm + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if(cursor.moveToFirst()){
+            // loop through the cursor (result set) and create new customer objects. put them into the return list
+            do{
+                int customerId = cursor.getInt(0);
+                String customerName = cursor.getString(1);
+                int customerAge = cursor.getInt(2);
+                boolean customerIsActive = cursor.getInt(3) == 1 ? true : false;
+
+                CustomerModel newCustomer = new CustomerModel(customerId, customerName, customerAge, customerIsActive);
+                foundCustomers.add(newCustomer);
+
+            } while(cursor.moveToNext());
+
+        } else{
+            // DB-Query returns an empty list :(
+        }
+
+        cursor.close();
+        db.close();
+
+        return foundCustomers;
+    }
+
 }
 
 

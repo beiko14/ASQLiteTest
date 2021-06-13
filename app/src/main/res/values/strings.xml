@@ -5,4 +5,5 @@
     <string name="ActiveCustomer">Active Customer</string>
     <string name="ViewAll">View all</string>
     <string name="Add">Add</string>
+    <string name="SearchCustomer">Search a Customer</string>
 </resources>

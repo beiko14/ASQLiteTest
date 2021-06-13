@@ -18,7 +18,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Button buttonViewAll, buttonAdd;
-    private EditText editTextName, editTextAge;
+    private EditText editTextName, editTextAge, editTextSearchField;
     private Switch buttonSwitch;
     private ListView listViewCustomerList;
 
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         editTextName = findViewById(R.id.editTextName);
         editTextAge = findViewById(R.id.editTextAge);
+        editTextSearchField = findViewById(R.id.editTextSearchField);
 
         buttonSwitch = findViewById(R.id.buttonSwitch);
         listViewCustomerList = findViewById(R.id.ListViewCustomerList);
@@ -46,9 +47,20 @@ public class MainActivity extends AppCompatActivity {
         buttonViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
 
-                showCustomersOnListView();
+                if(!editTextSearchField.getText().toString().equals("")){
+                    List<CustomerModel> tempList = new ArrayList<>();
+
+                    tempList = dataBaseHelper.searchCustomer(editTextSearchField.getText().toString());
+
+                    adapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, tempList);
+                    listViewCustomerList.setAdapter(adapter);
+
+                } else{
+                    showCustomersOnListView();
+                }
 
             }
         });
